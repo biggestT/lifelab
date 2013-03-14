@@ -4,7 +4,7 @@
 	<meta name="description" content="the lifelab wants to helpt you quantify yourself">
 	<meta name="keywords" content="quantified self, lifelab, livslabbet">
 	<meta name="author" content="Tor Nilsson Öhrn">
-    <title>TNM085 2013 Group 9</title>
+    <title>Lifelab</title>
     <link type="text/css" href="css/smoothness/jquery-ui-1.9.2.custom.css" rel="stylesheet">
     <link type="text/css"href="css/lifelab.css"  rel="stylesheet" >
     <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
@@ -13,13 +13,85 @@
 		$(function() { 
 			});	
 			
-
+		$.getJSON('js/testData.json', function( log ) {
 			
-		})
+			Category = function (name) {
+				this.name = name;
+				this.dur = 0;
+			}
+ 
+ 			var categories = new Array();
+ 			var totalDur = 0;
+ 			tm = new TreeMap('#lab1');
+
+		  $.each(log, function(key, entry) {
+		  	// convert duration from hh:mm to decimal hours float value
+		  	var durS = entry.Duration;
+		  	durS = durS.replace(":", "");
+		  	var l = durS.length;
+		  	var dur = parseFloat(durS.substr(0, l-2))/2.4 + parseFloat(durS.substr(l-2, l))/144;
+		  	var name = entry.Task;
+		  	
+
+  			var thisCategory = $.grep(categories, function (item) {
+  				return (item.name == name);
+  			})[0];
+		  	if ( !thisCategory ) {
+		  			thisCategory = new Category(name)
+		  			categories.push(thisCategory);
+		  	};
+		  	thisCategory.dur += dur;
+		  	totalDur += dur;
+		  });
+		  console.log(totalDur);
+		  tm.draw(categories);
+
+
+		});
+
+		TreeMap = function(cId) {
+		  var canvas = $(cId)[0];
+
+		  $(window).resize(function() {
+		    canvas.height = $(cId).height();
+		    canvas.width = $(cId).width();
+		  });
+		  $(window).trigger('resize');
+		  
+		  this.ctx = canvas.getContext('2d'); 
+		};
+
+		TreeMap.prototype.draw = function(categories) {
+			var ctx = this.ctx;
+			var c = this.ctx.canvas;
+			var currentHor = 0;
+
+			for (var i = 0; i < categories.length; i++) {
+				var shade = i/categories.length*200;
+				var relSize = categories[i].dur/70;
+				ctx.fillStyle = "rgb(" + shade + "," + (shade) + "," + (shade+100) + ")";
+				ctx.fillRect(currentHor,0,relSize*c.width,c.height);
+
+				ctx.save();
+					ctx.translate(currentHor,10);
+					ctx.rotate(Math.PI/2);
+					ctx.fillStyle = "rgb(255,255,255)";
+					ctx.font = "10px sans-serif";
+					ctx.fillText(categories[i].name, 0, 0);
+				ctx.restore();
+				
+				currentHor +=	 relSize*c.width;
+			};
+
+
+		}
+
+
 	</script>
 </head>
 <body>
-	<div id="message3"></div>
-	<canvas id="lab1"  width="1200" height="500" ></canvas>
+	<div id="labLog"></div>
+	<canvas id="lab1"  width="1000" height="300" ></canvas>
+	<p>En vecka i Januari 2013</p>
 </body>
 </html>
