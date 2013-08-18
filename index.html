@@ -1,10 +1,11 @@
 
 <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+<link href="treemap.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 	$(function() { 
 		
 		
-	$.getJSON('week1.json', function( log ) {
+	$.getJSON('week1Simple.json', function( log ) {
 		
 		Category = function (name) {
 			this.name = name;
@@ -113,8 +114,15 @@
 			'display': 'block',
 			'text-align': 'center'
 		});
-		block.text(name);
-		console.log(block);
+
+		var fontSize = Math.max(w/this.width * 10, 1);
+		var txtElement = $('<p>');
+		txtElement.css({
+			'font-size': fontSize + 'vw'
+		})
+		txtElement.text(name);
+
+		block.append(txtElement);
 		return block;
 	};
 
@@ -197,10 +205,6 @@
 		// }
 		squarify = function (areas, row, w) {
 
-			if (areas.length === 0 ) { 
-				map.addRow(row);
-				return; 
-			}
 
 			var curr = areas[0];
 			// var newRow = jQuery.extend(true, {}, row);
@@ -212,6 +216,10 @@
 				oldTotArea += row[i].area;
 			};
 			// oldTotArea -= curr.area;
+			if (areas.length === 0 ) { 
+				map.addRow(row, oldTotArea);
+				return; 
+			}
 
 			var newTotArea = oldTotArea;
 			newTotArea += curr.area;
@@ -299,8 +307,8 @@
 </script>
 
 <div id="treemap" style="
-    width: 400px;
-    height: 300px;">
+    width: 100%;
+    height: 100%;">
 </div>
-<canvas id="lab1"  width="1000" height="300" ></canvas>
-<p>En vecka i Januari 2013</p>
+<!-- <canvas id="lab1"  width="1000" height="300" ></canvas> -->
+<div id="title">CAPTURE THE WEEK 2013</div>

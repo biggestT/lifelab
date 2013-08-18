@@ -1,0 +1,20 @@
+@import url(http://fonts.googleapis.com/css?family=Press+Start+2P);
+@import url(http://fonts.googleapis.com/css?family=Port+Lligat+Slab);
+@import url(http://fonts.googleapis.com/css?family=Economica);
+
+body {
+	margin: 0px;
+	font-family: 'Economica', serif;
+}
+.timeblock {
+	color: white;
+	font-size: 1vmax;
+}
+#title {
+	color: white;
+	position: absolute;
+	margin: -15% 0;
+	font-size: 4vmax;
+	background-color: black;
+	padding: 2vmax;
+}
