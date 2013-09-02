@@ -1,10 +1,16 @@
+var app = app || {};
 
-<script type="text/javascript" src="js/lib/jquery-1.8.3.min.js"></script>
-<script type="text/javascript" src="js/lib/backbone.js"></script>
-<script type="text/javascript" src="js/treemap.js"></script>
-<link href="treemap.css" rel="stylesheet" type="text/css">
-<script type="text/javascript">
-	$(function() { 
+(function ($) {
+	'use strict';
+
+	app.AppView = Backbone.View.extend({
+
+		// Bind app to existing HTML div
+		el: '#treemap',
+
+		initalize: function() {
+			
+		}
 		
 		
 	$.getJSON('week1Simple.json', function( log ) {
@@ -76,6 +82,7 @@
 	  });
 
 	  console.log(totalDur);
+	  dtm.createEntries(categories);
 	  dtm.createAreas(categories, totalDur);
 	  dtm.sortAreas(categories, totalDur);
 	  dtm.squarification();
@@ -83,12 +90,3 @@
 	});
 
 });	
-
-
-</script>
-
-<div id="treemap" style="
-    width: 100%;
-    height: 100%;">
-</div>
-<div id="title">CAPTURE THE WEEK 2013</div>
