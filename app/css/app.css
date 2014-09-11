@@ -1,0 +1,11 @@
+body {
+
+}
+ul {
+	list-style-type: none;
+}
+
+li {
+	float: left;
+	background-color: lightblue;
+}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" ng-app="timelogApp">
+<head>
+  <meta charset="utf-8">
+  <title>My HTML File</title>
+  <link rel="stylesheet" href="css/app.css">
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="js/controllers.js"></script>
+</head>
+<body ng-controller="EntryListCtrl">
+
+  <ul>
+    <li class="entry" ng-repeat="entry in entries">
+      {{entry.Task}}
+      <p>{{entry.Duration}}</p>
+    </li>
+  </ul>
+  <p>{{ totalHrs}}:{{totalMin}}</p>
+
+</body>
+</html>

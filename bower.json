@@ -1,0 +1,21 @@
+{
+  "name": "lifelab",
+  "version": "0.0.0",
+  "homepage": "https://github.com/biggestT/lifelab",
+  "authors": [
+    "Tor Nilsson Ohrn <tornilssonohrn@gmail.com>"
+  ],
+  "description": "time tracking my life",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.24"
+  }
+}
