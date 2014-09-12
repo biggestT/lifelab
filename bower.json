@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.2.24"
+    "angular": "~1.2.24",
+    "jquery": "~2.1.1"
   }
 }

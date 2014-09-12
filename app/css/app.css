@@ -1,13 +1,18 @@
 body {
-
+	margin: 0;
 }
 ul {
 	list-style-type: none;
+	margin: 0;
 }
 
 li {
 	float: left;
-	background-color: orange;
+	background-color: blue;
 	display: block;
-	height: 100px;
+	height: 20vh;
+}
+#treemap {
+	width: 100vw;
+	height: 80vh;
 }

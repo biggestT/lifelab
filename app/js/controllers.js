@@ -1,17 +1,21 @@
 
 var timelogApp = angular.module('timelogApp', []);
 
-var categories;
+var categories, totalDur;
 
 timelogApp.controller('EntryListCtrl', function ($scope, $http) {
-	$http.get('data/week1.json').then(function(res){
+	$http.get('data/week1simple.json').then(function(res){
     addEntries(res.data);  
+    var dtm = new DOMTreeMap('#treemap');
+	  dtm.createAreas(categories, totalDur);
+	  dtm.sortAreas(categories, totalDur);
+	  dtm.squarification();
   });
   // calculate total minutes and hours for some given entries
 	// -----------------------
 	function addEntries(entries) {
 		categories = [];
-		var total = 0;
+		totalDur = 0;
 		for (var i in entries) {
 			var cur = entries[i];
 		// convert minutes and seconds to decimal hours for simpler calculations
@@ -19,19 +23,26 @@ timelogApp.controller('EntryListCtrl', function ($scope, $http) {
 		DecDuration = parts[0]/2.4+parts[1]/144;
 		cur.DecDuration=DecDuration;
 		// sum up decimal hours
-		total+=DecDuration;
+		totalDur+=DecDuration;
 		// add category of entry to know categorys if it is a new one
-		if (categories.indexOf(cur.Task) < 0) {
-			categories.push(cur.Task);
+		var categorySearch =$.grep(categories, function (e) { return e.name == cur.Task});
+		if (categorySearch.length === 0 ) {
+			var newCategory = [];
+			newCategory.name = cur.Task;
+			newCategory.dur = DecDuration;
+			categories.push(newCategory);
+		} else {
+			categorySearch[0].dur += DecDuration;
 		}
 	};
 	$scope.entries = entries;
-	$scope.totalDecimalTime  = total;
+	$scope.totalDecimalTime  = totalDur;
 	$scope.categories = categories;
 	}
 	// calculate entries opacity
 	$scope.getEntryColor = function (entry) {
-		var shade = categories.indexOf(entry.Task)/categories.length;
+		var categorySearch =$.grep(categories, function (e, i) { return e.name == entry.Task });
+		var shade = categories.indexOf(categorySearch[0])/categories.length;
 		return shade;
 	}
 

@@ -5,10 +5,12 @@
   <title>A week in the life of a Tor</title>
   <link rel="stylesheet" href="css/app.css">
   <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="js/treemap.js"></script>
   <script src="js/controllers.js"></script>
 </head>
 <body ng-controller="EntryListCtrl">
-
+  <div id="treemap"> </div>
   <ul>
     <li class="entry" ng-repeat="entry in entries" style="
     width:{{ entry.DecDuration/totalDecimalTime*100 }}%; 
