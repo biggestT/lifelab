@@ -7,5 +7,7 @@ ul {
 
 li {
 	float: left;
-	background-color: lightblue;
+	background-color: orange;
+	display: block;
+	height: 100px;
 }
