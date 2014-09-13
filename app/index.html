@@ -9,14 +9,27 @@
   <script src="js/treemap.js"></script>
   <script src="js/controllers.js"></script>
 </head>
-<body ng-controller="EntryListCtrl">
-  <div id="treemap"> </div>
-  <ul>
-    <li class="entry" ng-repeat="entry in entries" style="
-    width:{{ entry.DecDuration/totalDecimalTime*100 }}%; 
-    opacity:{{ getEntryColor(entry) }};
-    ">
+<body>
+  <div id="treemap" ng-controller="entries.treemap">
+    <div class="category-block categorial" ng-repeat="block in blocks" style="
+    opacity:{{ block.opacity }}; 
+    width:{{ block.width }}px;
+    height:{{ block.height }}px;
+    top:{{ block.top }}px;
+    left:{{ block.left }}px;">
+    <p class="block-text" style="font-size:{{ block.fontSize }}vw">
+      {{ block.name }}
+    </p>
+    </div>
+  </div>
+  <div id="timeline" ng-controller="entries.timeline">
+    <ul>
+      <li class="entry categorial" ng-repeat="entry in entries" style="
+      width:{{ entry.DecDuration/totalDecimalTime*100 }}%; 
+      opacity:{{ getColor(entry.Task) }};
+      ">
     </li>
   </ul>
+  </div>
 </body>
 </html>

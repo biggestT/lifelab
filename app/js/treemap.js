@@ -21,6 +21,7 @@
 		this._free.top = 0;
 		this._free.left = 0;
 		console.log(this._free);
+
 	};
 
 	DOMTreeMap.prototype.createAreas = function (data, total) {
@@ -42,31 +43,14 @@
 	}
 
 	DOMTreeMap.prototype.createTimeBlock = function (name, index, x, y, w, h) {
-		console.log(this._areas.length);
-		var shade = index/this._areas.length*200;
-		var color = "rgb(" + shade + "," + (shade) + "," + (shade+100) + ")";
-
-		var block = $('<div>', { 
-			class: 'timeblock'
-		});
-		block.css({
-			'background-color': color,
-			'position': 'absolute',
-			'width': w + 'px',
-			'height': h + 'px',
-			'top': y,
-			'left': x,
-			'display': 'block',
-			'text-align': 'center'
-		});
-		var fontSize = Math.max(w/this.width * 10, 1);
-		var txtElement = $('<p>');
-		txtElement.css({
-			'font-size': fontSize + 'vw'
-		})
-		txtElement.text(name);
-
-		block.append(txtElement);
+		var block = [];
+		block.opacity= index/(this._areas.length-1);
+		block.width = w;
+		block.height = h;
+		block.top = y;
+		block.left = x;
+		block.name = name;
+		block.fontSize = Math.max(w/this.width * 10, 1);
 		return block;
 	};
 
@@ -79,8 +63,6 @@
 		var yStart = this._free.top;
 		var freeArea = this._free.width * this._free.height;
 
-		var blocks = [];
-
 		var width, height;
 		
 		for (var i = 0; i < row.length; i++) {
@@ -92,16 +74,13 @@
 				height = tot / freeArea * this._free.height;
 				width = row[i].area / tot * this._free.width;
 			}
-			var $block = this.createTimeBlock(row[i].name, row[i].index, xStart, yStart, width, height);
+			var block = this.createTimeBlock(row[i].name, row[i].index, xStart, yStart, width, height);
 			xStart += (heightSmallest) ? 0 : width;
 			yStart += (widthSmallest) ? 0 : height;
 
-			blocks.push($block);
+			// add block to the others
+			this.blocks.push(block);
 		};
-		console.log(blocks);
-
-		this.$el.prepend(blocks);
-
 		this._free.left = (heightSmallest) ? this._free.left + width : this._free.left;
 		this._free.top = (widthSmallest) ? this._free.top + height : this._free.top;
 		this._free.width = (heightSmallest) ? this.width - this._free.left : this._free.width;
@@ -115,14 +94,12 @@
 
 	DOMTreeMap.prototype.squarification = function () {
 
-		// var tot = this._totDur;
-		// var areaList = this._categories;
 		var map = this;
 
+		// Clear or initiate the array that contain all the blocks
+		this.blocks = [];
+		
 		var worstAspectRatio = function (tot, areas, w) {
-			// areas.sort(function (a, b) {
-			// 	return b.area - a.area;
-			// });
 			if(areas.length === 0) {
 				console.log('outputting min aspect ratio: ' + Number.MAX_VALUE);
 				return Number.MAX_VALUE;
@@ -141,17 +118,13 @@
 
 		var width = function () {
 			var min = Math.min(map._free.width, map._free.height);
-			// console.log(min);
 			return min;
 		}
-		// var Row = function (row) {
-		// 	this._area = row
-		// }
+
 		squarify = function (areas, row, w) {
 
-
 			var curr = areas[0];
-			// var newRow = jQuery.extend(true, {}, row);
+
 			var newRow = row.slice(0);
 			newRow.push(curr);
 
@@ -159,7 +132,6 @@
 			for (var i = 0; i < row.length; i++) {
 				oldTotArea += row[i].area;
 			};
-			// oldTotArea -= curr.area;
 			if (areas.length === 0 ) { 
 				map.addRow(row, oldTotArea);
 				return; 
