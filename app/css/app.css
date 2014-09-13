@@ -7,6 +7,9 @@ body {
 .categorial {
 	background-color: orange;
 }
+.hidden {
+	visibility: hidden;
+}
 
 /* Timeline */
 ul {
@@ -23,6 +26,7 @@ li {
 #treemap {
 	width: 100vw;
 	height: 80vh;
+	border-bottom: 6px lightgray solid;
 }
 .category-block {
 	position: absolute;

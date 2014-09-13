@@ -38,6 +38,7 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 			categories[i].opacity=i/(categories.length-1);
 		}
 		service.entries=entries;
+
 		// notify users of this service
 		$rootScope.$broadcast('Log.update');
 	}
@@ -46,11 +47,8 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 }]);
 
 var timeline = ['$scope', 'Log', function ($scope, Log) {
-	console.log('running timeline controller code');
 	$scope.$on( 'Log.update', function () {
-		$scope.entries = Log.entries;
-		$scope.totalDecimalTime = Log.totalDur;
-		$scope.categories = Log.categories;
+		$scope.log = Log;
 		$scope.getColor = function (category) {
 			var categorySearch =$.grep(Log.categories, function (e) { return e.name == category});
 			return categorySearch[0].opacity;
@@ -63,6 +61,7 @@ var timeline = ['$scope', 'Log', function ($scope, Log) {
 var treemap = ['$scope', 'Log', function ($scope, Log) {
 	var ctm = new DOMTreeMap('#treemap');
 	$scope.$on( 'Log.update', function () {
+		$scope.log = Log;
 	  ctm.createAreas(Log.categories, Log.totalDur);
 	  ctm.sortAreas(Log.categories, Log.totalDur);
 	  ctm.squarification();
