@@ -11,8 +11,8 @@
 </head>
 <body>
   <div id="treemap" ng-controller="entries.treemap">
-    <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.selectedCategory = block.name" style="
-    opacity:{{ block.opacity }}; 
+    <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.selectedCategory = block.name"  ng-class="{ 'hidden' : !(block.name == log.selectedCategory) }"style="
+    background-color:{{ log.getColor(block.name) }}; 
     width:{{ block.width }}px;
     height:{{ block.height }}px;
     top:{{ block.top }}px;
@@ -26,7 +26,7 @@
     <ul>
       <li class="entry categorial" ng-repeat="entry in log.entries" ng-class="{ 'hidden' : !(entry.Task == log.selectedCategory) }" style="
       width:{{ entry.DecDuration/log.totalDur*100 }}%; 
-      opacity:{{ getColor(entry.Task) }};
+      background-color:{{ log.getColor(entry.Task) }};
       ">
     </li>
   </ul>

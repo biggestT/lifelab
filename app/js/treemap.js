@@ -44,7 +44,6 @@
 
 	DOMTreeMap.prototype.createTimeBlock = function (name, index, x, y, w, h) {
 		var block = [];
-		block.opacity= index/(this._areas.length-1);
 		block.width = w;
 		block.height = h;
 		block.top = y;

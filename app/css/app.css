@@ -4,17 +4,15 @@ body {
 }
 
 /* color theme */
-.categorial {
-	background-color: orange;
-}
 .hidden {
-	visibility: hidden;
+	opacity: 0.7;
 }
 
 /* Timeline */
 ul {
 	list-style-type: none;
 	margin: 0;
+	padding: 0;
 }
 li {
 	height: 20vh;
@@ -26,7 +24,6 @@ li {
 #treemap {
 	width: 100vw;
 	height: 80vh;
-	border-bottom: 6px lightgray solid;
 }
 .category-block {
 	position: absolute;

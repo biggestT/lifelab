@@ -1,6 +1,7 @@
 
 var timelogApp = angular.module('timelogApp', []);
 
+
 timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 	
 	var service = {
@@ -34,25 +35,60 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 				categorySearch[0].dur += DecDuration;
 			}
 		}
+
+		// HSV to RGB function from http://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
+		// --------------------
+		function hsvToRgb(h, s, v) {
+
+			var r, g, b, i, f, p, q, t;
+			if (h && s === undefined && v === undefined) {
+				s = h.s, v = h.v, h = h.h;
+			}
+			i = Math.floor(h * 6);
+			f = h * 6 - i;
+			p = v * (1 - s);
+			q = v * (1 - f * s);
+			t = v * (1 - (1 - f) * s);
+			switch (i % 6) {
+				case 0: r = v, g = t, b = p; break;
+				case 1: r = q, g = v, b = p; break;
+				case 2: r = p, g = v, b = t; break;
+				case 3: r = p, g = q, b = v; break;
+				case 4: r = t, g = p, b = v; break;
+				case 5: r = v, g = p, b = q; break;
+			}
+			return {
+				r: Math.floor(r * 255),
+				g: Math.floor(g * 255),
+				b: Math.floor(b * 255)
+			};
+		}
+
 		for (var i in categories) {
-			categories[i].opacity=i/(categories.length-1);
+			var v = 1.0;
+			var s = 0.8;
+			var h = i/(categories.length-1)*0.1;
+			var c = hsvToRgb(h, s, v);
+			categories[i].color = 'rgb('+c.r+','+c.g+','+c.b+')';
 		}
 		service.entries=entries;
 
 		// notify users of this service
 		$rootScope.$broadcast('Log.update');
 	}
+// function so that we don't have to store the categorycolor within each entry
+service.getColor = function (categoryName) {
+	var categorySearch =$.grep(this.categories, function (e) { return e.name == categoryName});
+	return categorySearch[0].color;
+};
 
 	return service;
 }]);
 
+
 var timeline = ['$scope', 'Log', function ($scope, Log) {
 	$scope.$on( 'Log.update', function () {
 		$scope.log = Log;
-		$scope.getColor = function (category) {
-			var categorySearch =$.grep(Log.categories, function (e) { return e.name == category});
-			return categorySearch[0].opacity;
-		};
 		console.log('added entries to views scope');
 		console.log($scope);
 	});
