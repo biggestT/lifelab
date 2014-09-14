@@ -94,20 +94,30 @@ var timeline = ['$scope', 'Log', function ($scope, Log) {
 	});
 }];
 
-var treemap = ['$scope', 'Log', function ($scope, Log) {
+var treemap = ['$scope', '$window', 'Log', function ($scope, $window, Log) {
+	
 	var ctm = new DOMTreeMap('#treemap');
-	$scope.$on( 'Log.update', function () {
-		$scope.log = Log;
+  var w = angular.element($window);
+
+  function updateTreemap () {
+
+  	ctm.updateSize();
 	  ctm.createAreas(Log.categories, Log.totalDur);
 	  ctm.sortAreas(Log.categories, Log.totalDur);
 	  ctm.squarification();
-		$scope.blocks = ctm.blocks;
-	})
+
+	  console.log('updating treemap');
+  	$scope.log = Log;
+  	$scope.blocks = ctm.blocks;
+  	$scope.$apply();
+  }
+  
+	$scope.$on('Log.update', updateTreemap);
+  w.bind('resize', updateTreemap);
+
 }];
 
 timelogApp.controller('entries.timeline', timeline);
 timelogApp.controller('entries.treemap', treemap);
-
-
 
 

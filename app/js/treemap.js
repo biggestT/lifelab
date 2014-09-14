@@ -9,7 +9,11 @@
 
 	DOMTreeMap = function (id) {
 		this.$el = $(id);
-		console.log(this.$el[0]);
+		this.updateSize();
+	};
+
+	
+	DOMTreeMap.prototype.updateSize = function() {
 		this.width = this.$el.width();
 		this.height = this.$el.height();
 		this._size = this.width*this.height;
@@ -20,8 +24,6 @@
 		this._free.height = this.height;
 		this._free.top = 0;
 		this._free.left = 0;
-		console.log(this._free);
-
 	};
 
 	DOMTreeMap.prototype.createAreas = function (data, total) {

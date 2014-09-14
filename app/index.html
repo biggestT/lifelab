@@ -2,7 +2,7 @@
 <html lang="en" ng-app="timelogApp">
 <head>
   <meta charset="utf-8">
-  <title>A week in the life of a Tor</title>
+  <title>2013 - Week 7</title>
   <link rel="stylesheet" href="css/app.css">
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -24,7 +24,7 @@
   </div>
   <div id="timeline" ng-controller="entries.timeline">
     <ul>
-      <li class="entry categorial" ng-repeat="entry in log.entries" ng-class="{ 'hidden' : !(entry.Task == log.selectedCategory) }" style="
+      <li class="entry categorial" ng-repeat="entry in log.entries" ng-click="log.selectedCategory = entry.Task" ng-class="{ 'hidden' : !(entry.Task == log.selectedCategory) }" style="
       width:{{ entry.DecDuration/log.totalDur*100 }}%; 
       background-color:{{ log.getColor(entry.Task) }};
       ">
