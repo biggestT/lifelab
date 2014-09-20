@@ -46,8 +46,8 @@
 
 	DOMTreeMap.prototype.createTimeBlock = function (name, index, x, y, w, h) {
 		var block = [];
-		block.width = w;
-		block.height = h;
+		block.width = w/this.width*100;
+		block.height = h/this.height*100;
 		block.top = y;
 		block.left = x;
 		block.name = name;

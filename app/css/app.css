@@ -1,11 +1,12 @@
 body {
 	margin: 0;
+	padding: 0;
 	color: white;
 }
 
 /* color theme */
 .hidden {
-	opacity: 0.7;
+	opacity: 0.5;
 }
 
 /* Timeline */
@@ -24,6 +25,7 @@ li {
 #treemap {
 	width: 100vw;
 	height: 80vh;
+	position: relative; 
 }
 .category-block {
 	position: absolute;

@@ -13,8 +13,8 @@
   <div id="treemap" ng-controller="entries.treemap">
     <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.selectedCategory = block.name"  ng-class="{ 'hidden' : !(block.name == log.selectedCategory) }"style="
     background-color:{{ log.getColor(block.name) }}; 
-    width:{{ block.width }}px;
-    height:{{ block.height }}px;
+    width:{{ block.width }}%;
+    height:{{ block.height }}%;
     top:{{ block.top }}px;
     left:{{ block.left }}px;">
     <p class="block-text" style="font-size:{{ block.fontSize }}vw">
