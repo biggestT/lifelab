@@ -20,6 +20,20 @@ li {
 	float: left;
 	display: block;
 }
+#timeline-overlay{
+	/*position: relative;*/
+}
+#timeline-overlay > li {
+	/*position: absolute;*/
+	/*color: black;*/
+	z-index: 1000;
+	border-left: 4px solid white;
+	border-right: 4px solid white;
+	margin: 0px -4px;
+	text-align: center;
+	height: 20px;
+	background-color: black;
+}
 
 /* Treemap */
 #treemap {

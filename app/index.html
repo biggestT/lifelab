@@ -23,6 +23,11 @@
     </div>
   </div>
   <div id="timeline" ng-controller="entries.timeline">
+    <ul id="timeline-overlay" >
+      <li class="timeline-day" ng-repeat="section in sections" style="width:{{ section.durationMs/totalDurMs*100 }}%;">
+        {{ section.name }}
+      </li>
+    </ul>
     <ul>
       <li class="entry categorial" ng-repeat="entry in log.entries" ng-click="log.selectedCategory = entry.Task" ng-class="{ 'hidden' : !(entry.Task == log.selectedCategory) }" style="
       width:{{ entry.DecDuration/log.totalDur*100 }}%; 

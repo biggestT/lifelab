@@ -88,6 +88,40 @@ service.getColor = function (categoryName) {
 
 var timeline = ['$scope', 'Log', function ($scope, Log) {
 	$scope.$on( 'Log.update', function () {
+		// create array of the days covered by the log
+		var days=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+		var sections = [];
+		var logStart=new Date(Log.entries[0].Start);
+		var logEnd=new Date(Log.entries[Log.entries.length-1].End);
+		var totalDurMs=logEnd.getTime()-logStart.getTime();
+
+		// first day ms to midnight
+		var startToMidnight = new Date(logStart.getFullYear(), logStart.getMonth(), logStart.getDate(), 24,0,0).getTime();
+		sections.push({
+			durationMs: startToMidnight-logStart.getTime(),
+			name: days[logStart.getDay()],
+			first: true
+		});
+
+		var curDate=logStart;
+		while (curDate.setDate(curDate.getDate()+1) < logEnd) {
+			sections.push({
+				durationMs: 86400000, 
+				name: days[curDate.getDay()]
+			})
+		}
+
+		// last day ms after midnight
+		var endAfterMidnight = new Date(logEnd.getFullYear(), logEnd.getMonth(), logEnd.getDate(), 0,0,0).getTime();
+		sections.push({
+			durationMs: logEnd.getTime()-endAfterMidnight,
+			name: days[curDate.getDay()],
+			last: true
+		});
+
+		$scope.sections=sections;
+		$scope.totalDurMs=totalDurMs;
+
 		$scope.log = Log;
 		console.log('added entries to views scope');
 		console.log($scope);
