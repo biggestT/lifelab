@@ -17,13 +17,23 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 	function addEntries (entries) {
 		var categories = service.categories;
 		for (var i in entries) {
+
 			var cur = entries[i];
+
 			// convert minutes and seconds to decimal hours for simpler calculations
 			var parts = cur.Duration.split(':');
 			DecDuration = parts[0]/2.4+parts[1]/144;
 			cur.DecDuration=DecDuration;
+			cur.selected = false; 
+
+			 // set date to the midpoint of this entry
+			var start = new Date(cur.Start).getTime();
+			var end = new Date(cur.End).getTime();
+			cur.date = new Date(start + (end-start)/2).toDateString();
+			
 			// sum up decimal hours
 			service.totalDur+=DecDuration;
+			
 			// add category of entry to know categorys if it is a new one
 			var categorySearch =$.grep(categories, function (e) { return e.name == cur.Task});
 			if (categorySearch.length === 0 ) {
@@ -82,14 +92,34 @@ service.getColor = function (categoryName) {
 	return categorySearch[0].color;
 };
 
+ service.filterByCategory = function(category) {
+		console.log(category);
+		angular.forEach(this.entries, function (entry) {
+			entry.selected = (entry.Task == category) ? true : false;
+		});
+		this.selectedCategory=category;
+		this.selectedDate=null;
+	};
+
+	service.filterByDate = function(date) {
+		console.log(date);
+		angular.forEach(this.entries, function (entry) {
+			entry.selected = (entry.date == date) ? true : false;
+		});
+		this.selectedCategory=null;
+		this.selectedDate=date;
+	};
+
 	return service;
 }]);
 
+// sections of the timeline
+// ---------------
 
-var timeline = ['$scope', 'Log', function ($scope, Log) {
-	$scope.$on( 'Log.update', function () {
-		// create array of the days covered by the log
-		var days=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+var timelineGuide= ['$scope', 'Log', function ($scope, Log) {
+	$scope.$on('Log.update', function () {
+		// create array of the dayps covered by the log
+		// var days=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 		var sections = [];
 		var logStart=new Date(Log.entries[0].Start);
 		var logEnd=new Date(Log.entries[Log.entries.length-1].End);
@@ -99,7 +129,7 @@ var timeline = ['$scope', 'Log', function ($scope, Log) {
 		var startToMidnight = new Date(logStart.getFullYear(), logStart.getMonth(), logStart.getDate(), 24,0,0).getTime();
 		sections.push({
 			durationMs: startToMidnight-logStart.getTime(),
-			name: days[logStart.getDay()],
+			date: logStart.toDateString(),
 			first: true
 		});
 
@@ -107,7 +137,7 @@ var timeline = ['$scope', 'Log', function ($scope, Log) {
 		while (curDate.setDate(curDate.getDate()+1) < logEnd) {
 			sections.push({
 				durationMs: 86400000, 
-				name: days[curDate.getDay()]
+				date: curDate.toDateString(),
 			})
 		}
 
@@ -115,13 +145,24 @@ var timeline = ['$scope', 'Log', function ($scope, Log) {
 		var endAfterMidnight = new Date(logEnd.getFullYear(), logEnd.getMonth(), logEnd.getDate(), 0,0,0).getTime();
 		sections.push({
 			durationMs: logEnd.getTime()-endAfterMidnight,
-			name: days[curDate.getDay()],
+			date: logEnd.toDateString(),
 			last: true
 		});
 
 		$scope.sections=sections;
 		$scope.totalDurMs=totalDurMs;
+		$scope.log=Log;
+	})
+	
+	
 
+}];
+
+// timeline of log entries
+// -------
+
+var timeline = ['$scope', 'Log', function ($scope, Log) {
+	$scope.$on( 'Log.update', function () {
 		$scope.log = Log;
 		console.log('added entries to views scope');
 		console.log($scope);
@@ -149,9 +190,25 @@ var treemap = ['$scope', '$window', 'Log', function ($scope, $window, Log) {
 	$scope.$on('Log.update', updateTreemap);
   w.bind('resize', updateTreemap);
 
+ 
 }];
 
+// filter for selected entries
+// var filterEntries =  function() {
+//     return function(entries) {
+//         return tasks.filter(function(entry) {
+//         	if 
+//             return false;
+
+//         });
+//     };
+// };
+// register controllers and filters
+// -----------
+
+// timelogApp.filter('selectedEntries', filterEntries)
 timelogApp.controller('entries.timeline', timeline);
 timelogApp.controller('entries.treemap', treemap);
+timelogApp.controller('entries.timelineGuide', timelineGuide);
 
 

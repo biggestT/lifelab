@@ -2,6 +2,7 @@ body {
 	margin: 0;
 	padding: 0;
 	color: white;
+	font-family: sans-serif;
 }
 
 /* color theme */
@@ -16,30 +17,32 @@ ul {
 	padding: 0;
 }
 li {
-	height: 20vh;
+	height: 16vh;
 	float: left;
 	display: block;
 }
-#timeline-overlay{
-	/*position: relative;*/
+
+
+/* Day guide for timeline */
+#timeline-guide {
+	z-index: 10000;
 }
-#timeline-overlay > li {
-	/*position: absolute;*/
-	/*color: black;*/
+.timeline-day {
 	z-index: 1000;
-	border-left: 4px solid white;
-	border-right: 4px solid white;
-	margin: 0px -4px;
 	text-align: center;
-	height: 20px;
-	background-color: black;
+	height: 4vh;
+	background-color: rgb(200, 200, 200);
+	color: white;
+	overflow: hidden;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
 }
 
 /* Treemap */
 #treemap {
 	width: 100vw;
 	height: 80vh;
-	position: relative; 
+	position: relative;
 }
 .category-block {
 	position: absolute;

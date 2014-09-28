@@ -11,7 +11,7 @@
 </head>
 <body>
   <div id="treemap" ng-controller="entries.treemap">
-    <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.selectedCategory = block.name"  ng-class="{ 'hidden' : !(block.name == log.selectedCategory) }"style="
+    <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.filterByCategory(block.name)"  ng-class="{ 'hidden' : !(block.name == log.selectedCategory) }"style="
     background-color:{{ log.getColor(block.name) }}; 
     width:{{ block.width }}%;
     height:{{ block.height }}%;
@@ -22,14 +22,19 @@
     </p>
     </div>
   </div>
-  <div id="timeline" ng-controller="entries.timeline">
-    <ul id="timeline-overlay" >
-      <li class="timeline-day" ng-repeat="section in sections" style="width:{{ section.durationMs/totalDurMs*100 }}%;">
-        {{ section.name }}
+  <!-- guide for days covered by this log -->
+  <div id="timeline-guide" ng-controller="entries.timelineGuide">
+    <ul>
+      <li class="timeline-day" ng-repeat="section in sections" ng-click="log.filterByDate(section.date)" ng-class="{ 'hidden' : !(section.date == log.selectedDate) }" style="width:{{ section.durationMs/totalDurMs*100 }}%;" >
+        {{ section.date }}
       </li>
     </ul>
+  </div>
+  <!-- entries in this log -->
+  <div id="timeline" ng-controller="entries.timeline">
+    
     <ul>
-      <li class="entry categorial" ng-repeat="entry in log.entries" ng-click="log.selectedCategory = entry.Task" ng-class="{ 'hidden' : !(entry.Task == log.selectedCategory) }" style="
+      <li class="entry categorial" ng-repeat="entry in log.entries" ng-click="log.filterByCategory(entry.Task)" ng-class="{ 'hidden' : !entry.selected }" style="
       width:{{ entry.DecDuration/log.totalDur*100 }}%; 
       background-color:{{ log.getColor(entry.Task) }};
       ">
