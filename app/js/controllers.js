@@ -76,8 +76,8 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 
 		for (var i in categories) {
 			var v = 1.0;
-			var s = 0.8;
-			var h = i/(categories.length-1)*0.1;
+			var s = 0.6;
+			var h = i/(categories.length-1);
 			var c = hsvToRgb(h, s, v);
 			categories[i].color = 'rgb('+c.r+','+c.g+','+c.b+')';
 		}
