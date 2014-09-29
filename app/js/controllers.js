@@ -34,7 +34,7 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 			service.totalDur+=cur.DecDuration;
 
 			// add category of entry to know categorys if it is a new one
-			var categorySearch =$.grep(categories, function (e) { return e.name == cur.Task});
+			var categorySearch=categories.filter(function (e) { return e.name == cur.Task});
 			if (categorySearch.length === 0 ) {
 				var newCategory = [];
 				newCategory.name = cur.Task;
@@ -88,7 +88,7 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 	}
 // function so that we don't have to store the categorycolor within each entry
 service.getColor = function (categoryName) {
-	var categorySearch =$.grep(this.categories, function (e) { return e.name == categoryName});
+	var categorySearch =this.categories.filter( function (e) { return e.name == categoryName});
 	return categorySearch[0].color;
 };
 
@@ -141,7 +141,7 @@ service.getColor = function (categoryName) {
 		}
 		angular.forEach(this.entries, function (entry) {
 			if (entry.selected) { 
-				var categorySearch =$.grep(this.categories, function (e) { return e.name == entry.Task});
+				var categorySearch =this.categories.filter( function (e) { return e.name == entry.Task});
 				categorySearch[0].dur+=entry.decDuration;
 				this.totalDurSelected+=entry.decDuration;
 			}
@@ -150,12 +150,13 @@ service.getColor = function (categoryName) {
 	};
 
 	service.animate=function() {
-		var totalMs=60000 // total duration of animation = 1 minute
+		var totalMs=180000 // total duration of animation = 1 minute
 		var count=0;
 		this.playing=true;
 		var that=this;
-		nextEntry();
 
+		// recursion ftw
+		nextEntry();
 		function nextEntry() {
 			if (count>that.entries.length-1 || !that.playing) {
 				that.playing=false;
@@ -177,7 +178,6 @@ service.getColor = function (categoryName) {
 var timelineGuide= ['$scope', 'Log', function ($scope, Log) {
 	$scope.$on('Log.update', function () {
 		// create array of the dayps covered by the log
-		// var days=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 		var sections = [];
 		var logStart=new Date(Log.entries[0].Start);
 		var logEnd=new Date(Log.entries[Log.entries.length-1].End);
@@ -188,7 +188,6 @@ var timelineGuide= ['$scope', 'Log', function ($scope, Log) {
 		sections.push({
 			durationMs: startToMidnight-logStart.getTime(),
 			date: logStart.toDateString(),
-			first: true
 		});
 
 		var curDate=logStart;
@@ -204,7 +203,6 @@ var timelineGuide= ['$scope', 'Log', function ($scope, Log) {
 		sections.push({
 			durationMs: logEnd.getTime()-endAfterMidnight,
 			date: logEnd.toDateString(),
-			last: true
 		});
 
 		$scope.sections=sections;
@@ -230,7 +228,7 @@ var timeline = ['$scope', 'Log', function ($scope, Log) {
 
 var treemap = ['$scope', '$window', 'Log', function ($scope, $window, Log) {
 	
-	var ctm = new DOMTreeMap('#treemap');
+	var ctm = new DOMTreeMap('treemap');
   var w = angular.element($window);
 
   function updateTreemap () {
@@ -260,6 +258,8 @@ var treemap = ['$scope', '$window', 'Log', function ($scope, $window, Log) {
 var animator = ['$scope', 'Log', function ($scope, Log) {
 	$scope.log = Log;
 }];
+
+
 
 timelogApp.controller('entries.animator', animator);
 timelogApp.controller('entries.timeline', timeline);

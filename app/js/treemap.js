@@ -8,14 +8,14 @@
 	};
 
 	DOMTreeMap = function (id) {
-		this.$el = $(id);
+		this.el = document.getElementById(id);
 		this.updateSize();
 	};
 
 	
 	DOMTreeMap.prototype.updateSize = function() {
-		this.width = this.$el.width();
-		this.height = this.$el.height();
+		this.width = this.el.offsetWidth;
+		this.height = this.el.offsetHeight;
 		this._size = this.width*this.height;
 
 		// Initialize free subrectangle to cover the whole div
@@ -171,4 +171,4 @@
 		squarify(areasCopy, [], width());
 	};
 
-}(jQuery));
+})();
