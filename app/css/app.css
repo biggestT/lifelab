@@ -25,7 +25,10 @@ li {
 	float: left;
 	display: block;
 }
-
+/*
+#animate-controls {
+	color: black;
+}*/
 
 /* Day guide for timeline */
 #timeline-guide {
@@ -39,7 +42,7 @@ li {
 	border-bottom-left-radius: 20px;
 	border-bottom-right-radius: 20px;
 }*/
-.timeline-guide-element {
+.timeline-guide-element, #animate-controls {
 	z-index: 1000;
 	text-align: center;
 	height: 5vh;
@@ -49,11 +52,15 @@ li {
 	margin-left: -2px;
 	border-left: 2px solid white;
 }
+.timeline-guide-element > p, #animate-controls > p{
+	margin: 1vh;
+}
+
 
 /* Treemap */
 #treemap {
 	width: 100vw;
-	height: 70vh;
+	height: 65vh;
 	position: relative;
 }
 .category-block {
@@ -61,4 +68,7 @@ li {
 	display: block;
 	text-align: center;
 	text-transform: capitalize;
+}
+.block-text {
+
 }

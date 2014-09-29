@@ -10,9 +10,13 @@
   <script src="js/controllers.js"></script>
 </head>
 <body>
+  <!-- animate shit -->
+  <div id="animate-controls" ng-controller="entries.animator" >
+    <p ng-if="!log.playing" ng-click="log.animate()">play week</p>
+    <p ng-if="log.playing" ng-click="log.playing=false">stop playing week</p>
+  </div>
   <div id="treemap" ng-controller="entries.treemap">
-    <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.filterByCategory(block.name)"  ng-class=
-    "{ 'invisible' : (block.width) }" style="
+    <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.filterByCategory(block.name)"   style="
     background-color:{{ log.getColor(block.name) }}; 
     width:{{ block.width }}%;
     height:{{ block.height }}%;
@@ -27,7 +31,7 @@
   <div id="timeline-guide" ng-controller="entries.timelineGuide">
     <ul>
       <li class="timeline-every-day timeline-guide-element" ng-click="log.selectAll()" ng-class="{ 'hidden' : (log.selectedDate) }" style="width:100%;" >
-        whole week
+        <p>whole week</p>
       </li>
     </ul>
   </div>
@@ -35,7 +39,7 @@
   <div id="timeline" ng-controller="entries.timeline">
     
     <ul>
-      <li class="entry categorial" ng-repeat="entry in log.entries" ng-click="log.filterByCategory(entry.Task)" ng-class="{ 'hidden' : !entry.selected }" style="
+      <li class="entry categorial" ng-repeat="entry in log.entries" ng-click="log.selectEntry(entry)" ng-class="{ 'hidden' : !entry.selected }" style="
       width:{{ entry.decDuration/log.totalDur*100 }}%; 
       background-color:{{ log.getColor(entry.Task) }};
       ">
@@ -46,7 +50,7 @@
   <div id="timeline-guide" ng-controller="entries.timelineGuide">
     <ul>
       <li class="timeline-single-day timeline-guide-element" ng-repeat="section in sections" ng-click="log.filterByDate(section.date)" ng-class="{ 'hidden' : !(section.date == log.selectedDate) }" style="width:{{ section.durationMs/totalDurMs*100 }}%;" >
-        {{ section.date }}
+        <p>{{ section.date }}</p>
       </li>
     </ul>
   </div>

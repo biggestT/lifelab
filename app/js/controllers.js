@@ -103,7 +103,7 @@ service.getColor = function (categoryName) {
 	};
 
 	service.filterByDate = function(date) {
-		console.log(date);
+		this.playing=false;
 		angular.forEach(this.entries, function (entry) {
 			entry.selected = (entry.date == date) ? true : false;
 		});
@@ -112,6 +112,7 @@ service.getColor = function (categoryName) {
 		$rootScope.$broadcast('Log.update');
 	};
 	service.selectAll=function(){
+		this.playing=false;
 		this.selectedCategory=null;
 		this.selectedDate=null;
 		angular.forEach(this.entries, function (entry) {
@@ -119,9 +120,21 @@ service.getColor = function (categoryName) {
 		});
 		$rootScope.$broadcast('Log.update');
 	};
+	service.deSelectAll=function(){
+		this.selectedCategory=null;
+		this.selectedDate=null;
+		angular.forEach(this.entries, function (entry) {
+			entry.selected = false;
+		});
+	};
+	service.selectEntry=function(entry){
+		this.deSelectAll();
+		entry.selected=true;
+		this.updateTotalDurations();
+		$rootScope.$broadcast('Log.update');
+	};
 	service.updateTotalDurations=function(){
 		this.totalDur=0.0;
-		// var categories = this.categories;
 		this.totalDurSelected=0.0;
 		for (var i in this.categories) {
 			this.categories[i].dur=0.0;
@@ -134,7 +147,26 @@ service.getColor = function (categoryName) {
 			}
 			this.totalDur+=entry.decDuration;
 		}, this);
-	}
+	};
+
+	service.animate=function() {
+		var totalMs=60000 // total duration of animation = 1 minute
+		var count=0;
+		this.playing=true;
+		var that=this;
+		nextEntry();
+
+		function nextEntry() {
+			if (count>that.entries.length-1 || !that.playing) {
+				that.playing=false;
+				return
+			}
+			var frameDuration=that.entries[count].decDuration/that.totalDur*totalMs;
+			that.selectEntry(that.entries[count]);
+			count++;
+			window.setTimeout(nextEntry, frameDuration);
+		};
+	};
 
 	return service;
 }]);
@@ -217,16 +249,19 @@ var treemap = ['$scope', '$window', 'Log', function ($scope, $window, Log) {
   }
   
 	$scope.$on('Log.update', updateTreemap);
-  w.bind('resize', updateTreemap);
+  w.bind('resize', updateTreemap); // must recalculate treemap if the window size changes
 
  
 }];
 
+// Controls the animation feature
+// -----------
 
+var animator = ['$scope', 'Log', function ($scope, Log) {
+	$scope.log = Log;
+}];
 
-// timelogApp.filter('selectedEntries', filterEntries)
+timelogApp.controller('entries.animator', animator);
 timelogApp.controller('entries.timeline', timeline);
 timelogApp.controller('entries.treemap', treemap);
 timelogApp.controller('entries.timelineGuide', timelineGuide);
-
-
