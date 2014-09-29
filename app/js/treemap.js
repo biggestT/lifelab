@@ -31,8 +31,10 @@
 		var areas = [];
 		for (var i = data.length - 1; i >= 0; i--) {
 			var currArea = (data[i].dur / total) * this._size;
-			areas[i] = new Area(currArea, data[i].name, i);
-			console.log(currArea);
+			if (currArea != 0) {
+				areas.push(new Area(currArea, data[i].name, i));
+				console.log(currArea);
+			}
 		};
 
 		this._areas = areas;
@@ -130,6 +132,7 @@
 			newRow.push(curr);
 
 			var oldTotArea = 0;
+
 			for (var i = 0; i < row.length; i++) {
 				oldTotArea += row[i].area;
 			};
@@ -163,6 +166,8 @@
 		};
 		var areasCopy = this._areas.slice(0);
 		console.log(areasCopy);
+
+		// yes, this is a recursive function
 		squarify(areasCopy, [], width());
 	};
 

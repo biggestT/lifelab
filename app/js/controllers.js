@@ -23,17 +23,16 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 			// convert minutes and seconds to decimal hours for simpler calculations
 			var parts = cur.Duration.split(':');
 			DecDuration = parts[0]/2.4+parts[1]/144;
-			cur.DecDuration=DecDuration;
-			cur.selected = false; 
+			cur.decDuration=DecDuration;
+			cur.selected = true; 
 
 			 // set date to the midpoint of this entry
 			var start = new Date(cur.Start).getTime();
 			var end = new Date(cur.End).getTime();
 			cur.date = new Date(start + (end-start)/2).toDateString();
 			
-			// sum up decimal hours
-			service.totalDur+=DecDuration;
-			
+			service.totalDur+=cur.DecDuration;
+
 			// add category of entry to know categorys if it is a new one
 			var categorySearch =$.grep(categories, function (e) { return e.name == cur.Task});
 			if (categorySearch.length === 0 ) {
@@ -45,6 +44,7 @@ timelogApp.service('Log', ['$rootScope', '$http', function ($rootScope, $http) {
 				categorySearch[0].dur += DecDuration;
 			}
 		}
+		service.totalDurSelected=service.totalDur;
 
 		// HSV to RGB function from http://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
 		// --------------------
@@ -99,6 +99,7 @@ service.getColor = function (categoryName) {
 		});
 		this.selectedCategory=category;
 		this.selectedDate=null;
+		$rootScope.$broadcast('Log.update');
 	};
 
 	service.filterByDate = function(date) {
@@ -108,7 +109,32 @@ service.getColor = function (categoryName) {
 		});
 		this.selectedCategory=null;
 		this.selectedDate=date;
+		$rootScope.$broadcast('Log.update');
 	};
+	service.selectAll=function(){
+		this.selectedCategory=null;
+		this.selectedDate=null;
+		angular.forEach(this.entries, function (entry) {
+			entry.selected = true;
+		});
+		$rootScope.$broadcast('Log.update');
+	};
+	service.updateTotalDurations=function(){
+		this.totalDur=0.0;
+		// var categories = this.categories;
+		this.totalDurSelected=0.0;
+		for (var i in this.categories) {
+			this.categories[i].dur=0.0;
+		}
+		angular.forEach(this.entries, function (entry) {
+			if (entry.selected) { 
+				var categorySearch =$.grep(this.categories, function (e) { return e.name == entry.Task});
+				categorySearch[0].dur+=entry.decDuration;
+				this.totalDurSelected+=entry.decDuration;
+			}
+			this.totalDur+=entry.decDuration;
+		}, this);
+	}
 
 	return service;
 }]);
@@ -163,6 +189,7 @@ var timelineGuide= ['$scope', 'Log', function ($scope, Log) {
 
 var timeline = ['$scope', 'Log', function ($scope, Log) {
 	$scope.$on( 'Log.update', function () {
+
 		$scope.log = Log;
 		console.log('added entries to views scope');
 		console.log($scope);
@@ -176,9 +203,11 @@ var treemap = ['$scope', '$window', 'Log', function ($scope, $window, Log) {
 
   function updateTreemap () {
 
+  	Log.updateTotalDurations();
+
   	ctm.updateSize();
-	  ctm.createAreas(Log.categories, Log.totalDur);
-	  ctm.sortAreas(Log.categories, Log.totalDur);
+	  ctm.createAreas(Log.categories, Log.totalDurSelected);
+	  ctm.sortAreas();
 	  ctm.squarification();
 
 	  console.log('updating treemap');
@@ -193,18 +222,7 @@ var treemap = ['$scope', '$window', 'Log', function ($scope, $window, Log) {
  
 }];
 
-// filter for selected entries
-// var filterEntries =  function() {
-//     return function(entries) {
-//         return tasks.filter(function(entry) {
-//         	if 
-//             return false;
 
-//         });
-//     };
-// };
-// register controllers and filters
-// -----------
 
 // timelogApp.filter('selectedEntries', filterEntries)
 timelogApp.controller('entries.timeline', timeline);

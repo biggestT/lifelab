@@ -11,7 +11,8 @@
 </head>
 <body>
   <div id="treemap" ng-controller="entries.treemap">
-    <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.filterByCategory(block.name)"  ng-class="{ 'hidden' : !(block.name == log.selectedCategory) }"style="
+    <div class="category-block categorial"  ng-repeat="block in blocks" ng-click="log.filterByCategory(block.name)"  ng-class=
+    "{ 'invisible' : (block.width) }" style="
     background-color:{{ log.getColor(block.name) }}; 
     width:{{ block.width }}%;
     height:{{ block.height }}%;
@@ -22,11 +23,11 @@
     </p>
     </div>
   </div>
-  <!-- guide for days covered by this log -->
+  <!-- select whole week -->
   <div id="timeline-guide" ng-controller="entries.timelineGuide">
     <ul>
-      <li class="timeline-day" ng-repeat="section in sections" ng-click="log.filterByDate(section.date)" ng-class="{ 'hidden' : !(section.date == log.selectedDate) }" style="width:{{ section.durationMs/totalDurMs*100 }}%;" >
-        {{ section.date }}
+      <li class="timeline-every-day timeline-guide-element" ng-click="log.selectAll()" ng-class="{ 'hidden' : (log.selectedDate) }" style="width:100%;" >
+        whole week
       </li>
     </ul>
   </div>
@@ -35,11 +36,19 @@
     
     <ul>
       <li class="entry categorial" ng-repeat="entry in log.entries" ng-click="log.filterByCategory(entry.Task)" ng-class="{ 'hidden' : !entry.selected }" style="
-      width:{{ entry.DecDuration/log.totalDur*100 }}%; 
+      width:{{ entry.decDuration/log.totalDur*100 }}%; 
       background-color:{{ log.getColor(entry.Task) }};
       ">
     </li>
   </ul>
+  </div>
+  <!-- guide for days covered by this log -->
+  <div id="timeline-guide" ng-controller="entries.timelineGuide">
+    <ul>
+      <li class="timeline-single-day timeline-guide-element" ng-repeat="section in sections" ng-click="log.filterByDate(section.date)" ng-class="{ 'hidden' : !(section.date == log.selectedDate) }" style="width:{{ section.durationMs/totalDurMs*100 }}%;" >
+        {{ section.date }}
+      </li>
+    </ul>
   </div>
 </body>
 </html>

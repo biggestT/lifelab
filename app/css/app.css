@@ -8,6 +8,10 @@ body {
 /* color theme */
 .hidden {
 	opacity: 0.5;
+	overflow: hidden;
+}
+.invisible {
+	visibility: none;
 }
 
 /* Timeline */
@@ -17,7 +21,7 @@ ul {
 	padding: 0;
 }
 li {
-	height: 16vh;
+	height: 20vh;
 	float: left;
 	display: block;
 }
@@ -27,21 +31,29 @@ li {
 #timeline-guide {
 	z-index: 10000;
 }
-.timeline-day {
-	z-index: 1000;
-	text-align: center;
-	height: 4vh;
-	background-color: rgb(200, 200, 200);
-	color: white;
-	overflow: hidden;
+/*.timeline-every-day {
 	border-top-left-radius: 20px;
 	border-top-right-radius: 20px;
+}
+.timeline-single-day {
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+}*/
+.timeline-guide-element {
+	z-index: 1000;
+	text-align: center;
+	height: 5vh;
+	background-color: rgb(48, 48, 48);
+	color: white;
+	overflow: hidden;
+	margin-left: -2px;
+	border-left: 2px solid white;
 }
 
 /* Treemap */
 #treemap {
 	width: 100vw;
-	height: 80vh;
+	height: 70vh;
 	position: relative;
 }
 .category-block {
